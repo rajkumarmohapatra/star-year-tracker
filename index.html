@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Star Year Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <canvas id="sky" aria-hidden="true"></canvas>
+    <main class="shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Geography based night planner</p>
+          <h1>Star Year Tracker</h1>
+          <p class="lede">Track every night of the year and find the dates most likely to be good for stargazing at your location.</p>
+        </div>
+        <div class="score-orbit" aria-label="Current best night score">
+          <span id="heroScore">--</span>
+          <small>best night</small>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <aside class="panel controls" aria-label="Planner controls">
+          <div class="field">
+            <label for="preset">Place</label>
+            <select id="preset">
+              <option value="custom">Custom location</option>
+              <option value="34.0522,-118.2437,Los Angeles, USA">Los Angeles, USA</option>
+              <option value="40.7128,-74.0060,New York, USA">New York, USA</option>
+              <option value="51.5072,-0.1276,London, UK">London, UK</option>
+              <option value="28.6139,77.2090,Delhi, India" selected>Delhi, India</option>
+              <option value="19.0760,72.8777,Mumbai, India">Mumbai, India</option>
+              <option value="-33.8688,151.2093,Sydney, Australia">Sydney, Australia</option>
+              <option value="-22.9519,-43.2105,Rio de Janeiro, Brazil">Rio de Janeiro, Brazil</option>
+              <option value="-24.6270,15.1880,Sossusvlei, Namibia">Sossusvlei, Namibia</option>
+              <option value="19.8206,-155.4681,Mauna Kea, Hawaii">Mauna Kea, Hawaii</option>
+              <option value="36.2400,-115.3200,Desert National Wildlife Refuge, USA">Dark sky Nevada, USA</option>
+            </select>
+          </div>
+
+          <div class="split">
+            <div class="field">
+              <label for="lat">Latitude</label>
+              <input id="lat" type="number" step="0.0001" min="-89" max="89" value="28.6139">
+            </div>
+            <div class="field">
+              <label for="lon">Longitude</label>
+              <input id="lon" type="number" step="0.0001" min="-180" max="180" value="77.2090">
+            </div>
+          </div>
+
+          <div class="split">
+            <div class="field">
+              <label for="year">Year</label>
+              <input id="year" type="number" min="1900" max="2100" value="2026">
+            </div>
+            <div class="field">
+              <label for="bortle">Bortle</label>
+              <input id="bortle" type="range" min="1" max="9" step="1" value="5">
+              <output id="bortleValue">5</output>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="threshold">Show nights rated at least</label>
+            <input id="threshold" type="range" min="0" max="100" step="5" value="65">
+            <output id="thresholdValue">65</output>
+          </div>
+
+          <div class="button-row">
+            <button id="useLocation" type="button">Use my location</button>
+            <button id="reset" type="button" class="ghost">Reset</button>
+          </div>
+
+          <div class="legend" aria-label="Score legend">
+            <span><i class="great"></i>Great</span>
+            <span><i class="good"></i>Good</span>
+            <span><i class="fair"></i>Fair</span>
+            <span><i class="poor"></i>Poor</span>
+          </div>
+        </aside>
+
+        <section class="planner">
+          <section class="weather" aria-label="Live weather">
+            <div class="panel-head"><h2>Live Weather</h2><button id="refreshWeather" type="button" class="ghost">Refresh weather</button></div>
+            <p id="weatherStatus" role="status">Loading weather...</p>
+            <div id="currentWeather" class="weather-current"></div>
+            <div id="nightWeather"></div>
+            <p class="weather-source">Model-based conditions and forecasts by <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>. Calendar scores are astronomical estimates; weather is shown separately.</p>
+          </section>
+          <div class="stats" aria-label="Year summary">
+            <article>
+              <span id="greatCount">--</span>
+              <p>great nights</p>
+            </article>
+            <article>
+              <span id="goodCount">--</span>
+              <p>good or better</p>
+            </article>
+            <article>
+              <span id="bestMonth">--</span>
+              <p>best month</p>
+            </article>
+            <article>
+              <span id="longestRun">--</span>
+              <p>longest run</p>
+            </article>
+          </div>
+
+          <div class="panel chart-panel">
+            <div class="panel-head">
+              <div>
+                <h2 id="locationTitle">Delhi, India</h2>
+                <p id="subtitle">Calculated from solar darkness, moonlight, season length, and light pollution.</p>
+              </div>
+              <select id="monthFocus" aria-label="Jump to month"></select>
+            </div>
+            <div id="calendar" class="calendar" aria-label="Year stargazing calendar"></div>
+          </div>
+        </section>
+
+        <aside class="panel insights" aria-label="Night details">
+          <h2>Night Detail</h2>
+          <div id="selectedNight" class="night-card"></div>
+          <h2>Best Upcoming Nights</h2>
+          <div id="bestList" class="best-list"></div>
+        </aside>
+      </section>
+    </main>
+
+    <script src="weather.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
