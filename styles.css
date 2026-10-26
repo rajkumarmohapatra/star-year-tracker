@@ -234,6 +234,50 @@ button.ghost {
 .planner {
   min-width: 0;
 }
+.place-status { margin: 0; color: var(--muted); font-size: 0.8rem; line-height: 1.4; }
+.place-results { display: grid; gap: 4px; max-height: 280px; overflow-y: auto; }
+.place-results button { background: #182824; color: var(--ink); text-align: left; padding: 10px; overflow-wrap: anywhere; }
+.observing-table { min-width: 1450px; }
+.observing-table th:first-child, .observing-table td:first-child { position: sticky; left: 0; background: #10151d; z-index: 1; }
+.weather .observing-table td { white-space: normal; min-width: 90px; }
+.observing-table td:nth-last-child(2) { min-width: 220px; }
+.parameter-guide { color: var(--muted); font-size: 0.85rem; line-height: 1.6; margin-top: 14px; }
+.parameter-guide summary { cursor: pointer; color: var(--great); }
+.parameter-guide dl { display: grid; grid-template-columns: 130px 1fr; gap: 8px 12px; }
+.parameter-guide dd { margin: 0; }
+.weather-table-wrap { max-width: 100%; border: 1px solid var(--line); border-radius: 6px; }
+.day { min-height: 0; }
+
+[hidden] { display: none !important; }
+.community { margin-top: 32px; padding: 28px 0; border-top: 1px solid var(--line); }
+.community h2 { font-size: 1.6rem; margin-bottom: 0; }
+.community h3 { font-size: 1rem; }
+.community a { color: var(--great); }
+.community-jump { display: inline-block; margin: 14px 0; color: var(--great); }
+.community-layout { display: grid; grid-template-columns: minmax(230px, 300px) minmax(0, 1fr); gap: 28px; }
+.community-account { padding-right: 24px; border-right: 1px solid var(--line); }
+.community form { display: grid; gap: 10px; }
+.community button { white-space: normal; }
+#googleLogin { width: 100%; margin-bottom: 18px; }
+.community-note, #communityStatus, #feedStatus { color: var(--muted); line-height: 1.5; }
+.community-note { font-size: 0.82rem; margin-top: 20px; }
+.community-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.community-tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid var(--line); }
+.community-tabs button { background: transparent; color: var(--muted); border: 0; border-radius: 0; border-bottom: 3px solid transparent; }
+.community-tabs button[aria-selected="true"] { color: var(--great); border-bottom-color: var(--great); }
+.community-messages { max-height: 440px; overflow-y: auto; overflow-wrap: anywhere; margin-bottom: 18px; }
+.community-post { padding: 16px 0; border-bottom: 1px solid var(--line); }
+.community-post-heading { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+.community-post time { color: var(--muted); font-size: 0.8rem; }
+.community-post p { white-space: pre-wrap; line-height: 1.6; margin: 10px 0; }
+.community-post button { font-size: 0.8rem; }
+.community textarea { width: 100%; resize: vertical; min-height: 90px; max-height: 320px; background: rgba(255,255,255,0.08); border: 1px solid var(--line); border-radius: 6px; padding: 12px; color: var(--ink); font: inherit; }
+.community-conversation { min-width: 0; }
+#verifyControls button { margin-bottom: 10px; }
+@media (max-width: 700px) {
+  .community-layout { grid-template-columns: 1fr; }
+  .community-account { padding: 0 0 20px; border-right: 0; border-bottom: 1px solid var(--line); }
+}
 
 .weather { margin-bottom: 22px; padding: 18px 0; border-bottom: 1px solid var(--line); }
 .weather h2 { font-size: 1.15rem; }
@@ -321,8 +365,8 @@ button:disabled { cursor: wait; opacity: 0.6; }
 
 .days {
   display: grid;
-  grid-template-columns: repeat(31, minmax(12px, 1fr));
-  gap: 5px;
+  grid-template-columns: repeat(31, minmax(0, 1fr));
+  gap: 3px;
 }
 
 .day {

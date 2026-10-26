@@ -14,6 +14,7 @@
           <p class="eyebrow">Geography based night planner</p>
           <h1>Star Year Tracker</h1>
           <p class="lede">Track every night of the year and find the dates most likely to be good for stargazing at your location.</p>
+          <a class="community-jump" href="#community">Comments &amp; Live Chat</a>
         </div>
         <div class="score-orbit" aria-label="Current best night score">
           <span id="heroScore">--</span>
@@ -24,7 +25,11 @@
       <section class="workspace">
         <aside class="panel controls" aria-label="Planner controls">
           <div class="field">
-            <label for="preset">Place</label>
+            <label for="placeSearch">Place</label>
+            <input id="placeSearch" type="search" placeholder="Type a city or postal code" value="Delhi, India" autocomplete="off" aria-describedby="placeStatus">
+            <p id="placeStatus" role="status" class="place-status">Delhi, India selected</p>
+            <div id="placeResults" class="place-results" aria-label="Matching places"></div>
+            <label for="preset">Saved places</label>
             <select id="preset">
               <option value="custom">Custom location</option>
               <option value="34.0522,-118.2437,Los Angeles, USA">Los Angeles, USA</option>
@@ -88,7 +93,7 @@
             <p id="weatherStatus" role="status">Loading weather...</p>
             <div id="currentWeather" class="weather-current"></div>
             <div id="nightWeather"></div>
-            <p class="weather-source">Model-based conditions and forecasts by <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>. Calendar scores are astronomical estimates; weather is shown separately.</p>
+            <p class="weather-source">Weather: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>. Seeing &amp; transparency: <a href="https://7timer.info/doc.php?lang=en" target="_blank" rel="noopener">7Timer</a>. Kp: <a href="https://www.swpc.noaa.gov/products/planetary-k-index" target="_blank" rel="noopener">NOAA SWPC</a>. Moon &amp; planets: <a href="https://github.com/cosinekitty/astronomy" target="_blank" rel="noopener">Astronomy Engine</a>. Calendar scores remain separate astronomical estimates.</p>
           </section>
           <div class="stats" aria-label="Year summary">
             <article>
@@ -128,9 +133,53 @@
           <div id="bestList" class="best-list"></div>
         </aside>
       </section>
+      <section id="community" class="community" aria-labelledby="communityTitle">
+        <div class="panel-head"><div><p class="eyebrow">Under the same sky</p><h2 id="communityTitle">Community</h2></div></div>
+        <p id="communityStatus" role="status">Connecting to community...</p>
+        <div class="community-layout">
+          <aside class="community-account">
+            <h3>Your account</h3>
+            <p id="communityUser">Not signed in</p>
+            <div id="authControls">
+              <button id="googleLogin" type="button" disabled>Continue with Google</button>
+              <form id="emailAuth">
+                <label for="authEmail">Email</label><input id="authEmail" type="email" autocomplete="email" required maxlength="254">
+                <label for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="current-password" minlength="8" required maxlength="128">
+                <div class="community-actions"><button type="submit" disabled>Sign in</button><button id="createAccount" type="button" class="ghost" disabled>Create account</button></div>
+                <button id="resetPassword" type="button" class="ghost" disabled>Reset password</button>
+              </form>
+            </div>
+            <div id="signedInControls" hidden>
+              <div id="verifyControls" hidden><p>Verify your email before posting.</p><button id="sendVerification" type="button" class="ghost">Send verification email</button><button id="checkVerification" type="button" class="ghost">I verified my email</button></div>
+              <button id="logout" type="button" class="ghost">Sign out</button>
+            </div>
+            <p class="community-note">Posts and display names are public. Keep your email, exact location, and other personal details out of messages. Be respectful. Spam and harassment may be removed.</p>
+          </aside>
+          <div class="community-conversation">
+            <div class="community-tabs" role="tablist" aria-label="Community channels">
+              <button id="commentsTab" type="button" role="tab" aria-selected="true" aria-controls="conversationPanel" data-channel="comments">Comments</button>
+              <button id="chatTab" type="button" role="tab" aria-selected="false" aria-controls="conversationPanel" tabindex="-1" data-channel="chat">Live Chat</button>
+            </div>
+            <div id="conversationPanel" role="tabpanel" aria-labelledby="commentsTab">
+              <p id="feedStatus" role="status">Messages are not connected yet.</p>
+              <div id="communityMessages" class="community-messages" aria-label="Community messages" tabindex="0"></div>
+              <form id="messageForm">
+                <label for="displayName">Public display name</label><input id="displayName" maxlength="40" minlength="2" placeholder="Stargazer" required>
+                <label for="messageBody" id="messageLabel">Your comment</label><textarea id="messageBody" rows="3" maxlength="1000" required placeholder="Share a stargazing experience or ask a question..."></textarea>
+                <div class="community-actions"><span id="messageCount">0 / 1000</span><button id="sendMessage" type="submit" disabled>Post comment</button></div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
+    <script src="astronomy.browser.min.js"></script>
+    <script src="observing.js"></script>
     <script src="weather.js"></script>
     <script src="app.js"></script>
+    <script src="places.js"></script>
+    <script src="firebase-config.js"></script>
+    <script type="module" src="community.js"></script>
   </body>
 </html>

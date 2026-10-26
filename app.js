@@ -160,6 +160,10 @@ function render() {
   output.bortle.value = controls.bortle.value;
   output.threshold.value = controls.threshold.value;
   output.locationTitle.textContent = placeName || `${Number(controls.lat.value).toFixed(2)}, ${Number(controls.lon.value).toFixed(2)}`;
+  if (document.activeElement !== document.querySelector("#placeSearch")) {
+    document.querySelector("#placeSearch").value = placeName || "";
+    document.querySelector("#placeStatus").textContent = `${output.locationTitle.textContent} selected`;
+  }
   renderMonthOptions();
   renderStats();
   renderCalendar();

@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function verified() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+    function channelValid(channel) { return channel in ['comments', 'chat']; }
+    match /channels/{channel}/messages/{messageId} {
+      allow get: if channelValid(channel);
+      allow list: if channelValid(channel) && request.query.limit != null && request.query.limit <= 100;
+      allow create: if channelValid(channel) && verified()
+        && request.resource.data.keys().hasOnly(['uid', 'name', 'text', 'createdAt'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 2 && request.resource.data.name.size() <= 40
+        && request.resource.data.text is string
+        && request.resource.data.text.size() >= 1 && request.resource.data.text.size() <= 1000
+        && request.resource.data.createdAt == request.time
+        && getAfter(/databases/$(database)/documents/postingLimits/$(request.auth.uid)).data.lastPost == request.time
+        && getAfter(/databases/$(database)/documents/postingLimits/$(request.auth.uid)).data.messageId == messageId
+        && getAfter(/databases/$(database)/documents/postingLimits/$(request.auth.uid)).data.channel == channel;
+      allow delete: if verified() && resource.data.uid == request.auth.uid;
+      allow update: if false;
+      match /reports/{reporter} {
+        allow create: if channelValid(channel) && verified() && reporter == request.auth.uid
+          && request.resource.data.keys().hasOnly(['uid', 'createdAt'])
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.createdAt == request.time
+          && exists(/databases/$(database)/documents/channels/$(channel)/messages/$(messageId));
+        allow read, update, delete: if false;
+      }
+    }
+    match /postingLimits/{uid} {
+      allow get: if verified() && request.auth.uid == uid;
+      allow create, update: if verified() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['lastPost', 'messageId', 'channel'])
+        && request.resource.data.messageId is string
+        && channelValid(request.resource.data.channel)
+        && request.resource.data.lastPost == request.time
+        && (!exists(/databases/$(database)/documents/postingLimits/$(uid)) || request.time >= resource.data.lastPost + duration.value(10, 's'))
+        && !exists(/databases/$(database)/documents/channels/$(request.resource.data.channel)/messages/$(request.resource.data.messageId))
+        && getAfter(/databases/$(database)/documents/channels/$(request.resource.data.channel)/messages/$(request.resource.data.messageId)).data.uid == uid;
+      allow list, delete: if false;
+    }
+  }
+}
